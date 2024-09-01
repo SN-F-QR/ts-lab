@@ -17,3 +17,24 @@ export type Zip<T extends any[], U extends any[]> =
         : [...T]
     : U;
 
+// 简接大小写调整
+export type SpOnGeCaSe<
+    Text,
+    FirstTransform extends "upper" | "lower" = "upper"
+> = Text extends `${infer First}${infer Rest}` ? 
+        FirstTransform extends "upper" ? 
+        `${Capitalize<First>}${SpOnGeCaSe<Rest, "lower">}` : 
+        `${Lowercase<First>}${SpOnGeCaSe<Rest, "upper">}` : 
+    Text;
+
+// Split
+export type SplitOn<Text extends string, On extends string> = 
+    Text extends `${infer Before}${On}${infer After}` ?
+        [Before, ...SplitOn<After, On>] :
+        [Text]
+
+// Replace Substring
+export type WordReplace<Text extends string, Original extends string, Replacement extends string>
+    = Text extends `${infer Prefix}${Original}${infer Suffix}` ?
+        WordReplace<`${Prefix}${Replacement}${Suffix}`, Original, Replacement> :
+        Text;
